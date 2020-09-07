@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: php
+    build:
+      context: .
+      dockerfile: php/Dockerfile
+    volumes:
+      - .:/var/www/symfony-docker
+  nginx:
+    container_name: nginx
+    depends_on:
+      - php
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    volumes:
+      - .:/var/www/symfony-docker/
+    ports:
+      - 9000:80
+  pgsql:
+    container_name: pgsql
+    build:
+      context: .
+      dockerfile: pgsql/Dockerfile
+    ports:
+      - 5433:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
