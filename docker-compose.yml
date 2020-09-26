@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: php/Dockerfile
+    environment:
+      APP_ENV: ${APP_ENV}
     volumes:
       - .:/var/www/symfony-docker
   nginx:
