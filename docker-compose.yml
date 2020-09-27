@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: php/Dockerfile
+    depends_on:
+      - mysql
     environment:
       APP_ENV: ${APP_ENV}
     volumes:
@@ -21,12 +23,17 @@ services:
       - .:/var/www/symfony-docker/
     ports:
       - 9000:80
-  pgsql:
-    container_name: pgsql
+  mysql:
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: symfony_docker
+      MYSQL_USER: george
+      MYSQL_PASSWORD: panameraflow1
+      MYSQL_ROOT_PASSWORD: secret
     build:
       context: .
-      dockerfile: pgsql/Dockerfile
+      dockerfile: mysql/Dockerfile
     ports:
-      - 5433:5432
+      - 3307:3306
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - ./database:/var/lib/mysql
