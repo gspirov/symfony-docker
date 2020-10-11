@@ -27,5 +27,17 @@ services:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\EventListener\LogoutListener:
+        tags:
+            - name: 'kernel.event_listener'
+              event: 'Symfony\Component\Security\Http\Event\LogoutEvent'
+              method: 'onLogout'
+              dispatcher: security.event_dispatcher.main
+
+    app.menu_builder:
+        class: App\Menu\Builder
+        arguments: ['@knp_menu.factory']
+        tags:
+            - name: knp_menu.menu_builder
+              method: menu
+              alias: main
