@@ -21,6 +21,16 @@
 
             {% block content %}{% endblock %}
         {% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            <script>
+                (function () {
+                    const eventSource = new EventSource('http://localhost:4000/.well-known/mercure?topic=myTopic');
+
+                    eventSource.onmessage = event => {
+                        console.log(JSON.parse(event.data));
+                    }
+                })();
+            </script>
+        {% endblock %}
     </body>
 </html>
