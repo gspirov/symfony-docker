@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -43,6 +45,16 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=155)
      */
     private $username;
+
+    /**
+     * @ORM\OneToMany(targetEntity=UserFriends::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $userFriends;
+
+    public function __construct()
+    {
+        $this->userFriends = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -125,6 +137,36 @@ class User implements UserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserFriends[]
+     */
+    public function getUserFriends(): Collection
+    {
+        return $this->userFriends;
+    }
+
+    public function addUserFriend(UserFriends $userFriend): self
+    {
+        if (!$this->userFriends->contains($userFriend)) {
+            $this->userFriends[] = $userFriend;
+            $userFriend->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserFriend(UserFriends $userFriend): self
+    {
+        if ($this->userFriends->contains($userFriend)) {
+            $this->userFriends->removeElement($userFriend);
+            if ($userFriend->getUserId() === $this) {
+                $userFriend->setUserId(null);
+            }
+        }
 
         return $this;
     }

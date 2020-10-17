@@ -12,8 +12,9 @@ class Builder
      * @var FactoryInterface $factory
      */
     private $factory;
+
     /**
-     * @var Security
+     * @var Security $security
      */
     private $security;
 
@@ -37,10 +38,16 @@ class Builder
 
         $menu->addChild('Home', ['route' => 'app_home']);
 
-        $menu->addChild('Profile', [
-            'route' => 'app_profile',
-            'routeParameters' => ['id' => 1]
-        ]);
+        if ($user instanceof User) {
+            $menu->addChild('Profile', [
+                'route' => 'app_profile',
+                'routeParameters' => ['id' => $user->getId()]
+            ]);
+
+            $menu->addChild('Users', [
+                'route' => 'app_users'
+            ]);
+        }
 
         return $menu;
     }

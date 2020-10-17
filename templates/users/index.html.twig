@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+    <div class="count">
+        Users count: {{ pagination.getTotalItemCount }}
+    </div>
+    <table>
+        <tr>
+            <th{% if pagination.isSorted('u.id') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(pagination, 'Id', 'u.id') }}
+            </th>
+            <th{% if pagination.isSorted('u.username') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(pagination, 'Username', 'u.username') }}
+            </th>
+        </tr>
+
+        {% for user in pagination %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>
+                    <a href="{{ path('app_add_friend', {'friendId': user.id}) }}">Add Friend</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}
